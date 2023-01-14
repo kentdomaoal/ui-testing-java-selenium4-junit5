@@ -17,7 +17,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 public class BalsamHillTest {
     private WebDriver driver;
 
-    @BeforeEach
+//    @BeforeEach
     public void setUp() {
         DriverManager driverManager = new DriverManager();
         driver = driverManager.createWebDriver();
@@ -25,7 +25,12 @@ public class BalsamHillTest {
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
     }
 
-    @Test
+//    @AfterEach
+    public void tearDown() {
+        driver.close();
+    }
+
+//    @Test
     public void advanceSearchChristmasTree() {
         HomePage homePage = new HomePage(driver);
         homePage.loadPage();
@@ -46,9 +51,6 @@ public class BalsamHillTest {
         assertThat(page.getProductByIndex(productList, 4),equalTo("Berkshire Mountain Fir"));
     }
 
-    @AfterEach
-    public void tearDown() {
-        driver.close();
-    }
+
 
 }
