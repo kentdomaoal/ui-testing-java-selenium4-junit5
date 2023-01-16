@@ -1,31 +1,29 @@
 package com.balsamhill.pages;
 
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.Select;
-import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class ArtificialChristmasTreePage extends Page {
-    @FindBy(xpath = "//div[contains(text(),'Most Popular Trees')]/parent::section/div/ul/li")
+//    @FindBy(xpath = "//div[contains(text(),'Most Popular Trees')]/parent::section/div/ul/li//div[@class='wo-mtslider__title']")
+    @FindBy(xpath = "//div[text()='Most Popular Trees']/parent::section//div[@class='wo-mtslider__title']")
     List<WebElement> headerSliderProducts;
+    WebDriver driver;
     public ArtificialChristmasTreePage(WebDriver driver) {
         super(driver);
+        this.driver = driver;
     }
 
-    public List<String> getHeaderSliderProducts(){
+    public List<String> getHeaderSliderProducts() throws InterruptedException {
         List<String> productList = new ArrayList<>();
+
         for (WebElement product: headerSliderProducts) {
-            productList.add(product.getText());
+            productList.add(product.getAttribute("textContent"));
         }
         return productList;
     }
-
 
 }

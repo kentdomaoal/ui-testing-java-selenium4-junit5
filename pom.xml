@@ -88,6 +88,14 @@
       <version>5.0.0</version>
     </dependency>
 
+    <!-- Dependency Injection -->
+    <dependency>
+      <groupId>io.cucumber</groupId>
+      <artifactId>cucumber-picocontainer</artifactId>
+      <version>7.11.0</version>
+      <scope>test</scope>
+    </dependency>
+
   </dependencies>
 
   <build>

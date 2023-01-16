@@ -1,6 +1,5 @@
 package com.balsamhill.pages;
 
-import com.balsamhill.util.ConfigFileReader;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
@@ -19,10 +18,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Page {
-    private static final Logger LOGGER = LoggerFactory.getLogger(HomePage.class);
-    private WebDriver driver;
-    private WebDriverWait wait;
-    private ConfigFileReader config = new ConfigFileReader();
+    private static final Logger LOGGER = LoggerFactory.getLogger(Page.class);
+    private final WebDriver driver;
+    protected final WebDriverWait wait;
 
     // Page Elements
     @FindBy(id = "em-close")
@@ -40,14 +38,13 @@ public class Page {
             + "/following-sibling::span[@class='arrow' and not(@disabled)]";
     private String subOptionXpath = "//div/span/span[contains(@class,'facet-name-text') "
             + "and contains(text(),'{}') and not(@disabled)]";
-
     private String selectedOptionXpath = "//div[@class='filter-selected-blk']//span[text()='{}']";
 
     public Page(WebDriver driver){
         this.driver = driver;
         PageFactory.initElements(driver, this);
-        wait = new WebDriverWait(driver, Duration.ofSeconds(20));
-        LOGGER.info("Base page initialized.");
+        this.wait = new WebDriverWait(driver, Duration.ofSeconds(20));
+        LOGGER.debug("Base page initialized.");
     }
 
     public void refreshPage(){
@@ -73,7 +70,7 @@ public class Page {
         WebElement mainOptionElement = driver.findElement(By.xpath(formatXpath(mainOptionXpath,mainOption)));
 
         Actions actions = new Actions(driver);
-        actions.moveToElement(mainOptionElement);
+        actions.scrollToElement(mainOptionElement).perform();
         wait.until(ExpectedConditions.elementToBeClickable(mainOptionElement));
         mainOptionElement.click();
     }
@@ -86,12 +83,19 @@ public class Page {
         }
     }
 
-    public void sortBy(String option){
+    public void sortBy(String option) {
+        wait.until(ExpectedConditions.visibilityOfAllElements(listOfProducts));
         Select sortOptionElement = new Select(sortOption);
         sortOptionElement.selectByVisibleText(option);
+//        try {
+//            Thread.sleep(3000);
+//        } catch (InterruptedException e) {
+//            throw new RuntimeException(e);
+//        }
     }
 
     public List<String> getProductList(){
+        wait.until(ExpectedConditions.visibilityOfAllElements(listOfProducts));
         List<String> productList = new ArrayList<>();
         for (WebElement product: listOfProducts) {
             productList.add(product.getText());
@@ -112,7 +116,7 @@ public class Page {
 
     public Boolean isOptionNotSelected(String option){
         try{
-            WebElement selectedOption = driver.findElement(By.xpath(formatXpath(selectedOptionXpath,option)));
+            driver.findElement(By.xpath(formatXpath(selectedOptionXpath,option)));
             return false;
         } catch (NoSuchElementException e){
             return true;

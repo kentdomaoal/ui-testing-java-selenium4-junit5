@@ -20,10 +20,14 @@ public class PageSteps {
     private WebDriver driver;
     private HomePage homePage;
     private ArtificialChristmasTreePage page;
+    private final DriverManager driverManager;
+
+    public PageSteps(DriverManager driverManager) {
+        this.driverManager = driverManager;
+    }
 
     @Before
     public void setUp() {
-        DriverManager driverManager = new DriverManager();
         driver = driverManager.createWebDriver();
         driver.manage().window().maximize();
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
@@ -49,22 +53,15 @@ public class PageSteps {
     public void refine_the_results_using_the_following_options(DataTable dataTable) throws InterruptedException {
         page = new ArtificialChristmasTreePage(driver);
         assertThat(page.getHeader(),equalTo("Artificial Christmas Trees"));
-        String mainOption = "";
-        String subOption = "";
 
         List<Map<String, String>> rows = dataTable.asMaps(String.class, String.class);
         for (Map<String, String> columns : rows) {
-            mainOption = columns.get("mainOption");
-            subOption = columns.get("subOption");
-
-            page.selectMainOption(mainOption);
-            System.out.println(subOption+ " is not selected: "+ page.isOptionNotSelected(subOption));
-            page.selectSubOption(subOption);
-            System.out.println(subOption+ " is not selected: "+ page.isOptionNotSelected(subOption));
+            page.selectMainOption(columns.get("mainOption"));
+            page.selectSubOption(columns.get("subOption"));
         }
     }
     @When("sort the results by {string}")
-    public void sort_the_results_by(String sortOption) {
+    public void sort_the_results_by(String sortOption) throws InterruptedException {
         page.sortBy(sortOption);
     }
     @Then("user should see the following products in order")
