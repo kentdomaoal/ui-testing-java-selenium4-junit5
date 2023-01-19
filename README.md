@@ -39,10 +39,20 @@ cd ui-testing-selenium-cucumber
 mvn clean test
 ``` 
 ### View html report
-Cucumber Report can be found on this directory on your project root.
-
+- Cucumber Report can be found on this directory on your project root.
+    ```
     /target/cucumber-reports/Cucumber.html
-
-Moreover, Extended Cucumber report can be found on this directory.
-
+    ```
+- Moreover, Extended Cucumber report can be found on this directory.
+    ```
     /target/cucumber/cucumber-html-reports/overview-features.html
+    ```
+  
+- Alternatively, run below command to generate report using [Cluecumber](https://github.com/trivago/cluecumber/tree/main/maven) plugin
+    ``` 
+    mvn cluecumber:reporting
+    ```
+  And report can be found on this directory
+    ```
+    /target/generated-report/index.html
+    ```

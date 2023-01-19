@@ -6,7 +6,10 @@ import com.balsamhill.util.DriverManager;
 import io.cucumber.datatable.DataTable;
 import io.cucumber.java.After;
 import io.cucumber.java.Before;
+import io.cucumber.java.Scenario;
 import io.cucumber.java.en.*;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 
 import java.time.Duration;
@@ -34,7 +37,12 @@ public class PageSteps {
     }
 
     @After
-    public void tearDown() {
+    public void tearDown(Scenario scenario) {
+        if(scenario.isFailed()) {
+            final byte[] screenshot = ((TakesScreenshot) driver).getScreenshotAs(OutputType.BYTES);
+            scenario.attach(screenshot, "image/png", scenario.getName());
+        }
+
         driver.close();
     }
 
@@ -66,11 +74,11 @@ public class PageSteps {
     }
     @Then("user should see the following products in order")
     public void user_should_see_the_following_products_in_order(DataTable dataTable) {
-        List<String> productList = page.getProductList();
+//        List<String> productList = page.getProductList();
 
         List<Map<String, String>> rows = dataTable.asMaps(String.class, String.class);
         for (Map<String, String> columns : rows) {
-            assertThat(page.getProductByIndex(productList, Integer.parseInt(columns.get("order")))
+            assertThat(page.getProductByIndex(Integer.parseInt(columns.get("order")))
                     ,equalTo(columns.get("productName")));
         }
     }

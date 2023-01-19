@@ -21,6 +21,7 @@ public class Page {
     private static final Logger LOGGER = LoggerFactory.getLogger(Page.class);
     private final WebDriver driver;
     protected final WebDriverWait wait;
+    protected Actions actions;
 
     // Page Elements
     @FindBy(id = "em-close")
@@ -69,7 +70,7 @@ public class Page {
     public void selectMainOption(String mainOption){
         WebElement mainOptionElement = driver.findElement(By.xpath(formatXpath(mainOptionXpath,mainOption)));
 
-        Actions actions = new Actions(driver);
+        actions = new Actions(driver);
         actions.scrollToElement(mainOptionElement).perform();
         wait.until(ExpectedConditions.elementToBeClickable(mainOptionElement));
         mainOptionElement.click();
@@ -112,6 +113,13 @@ public class Page {
             }
         }
         return product;
+    }
+
+    public String getProductByIndex(int index){
+        wait.until(ExpectedConditions.visibilityOfAllElements(listOfProducts));
+        WebElement product = listOfProducts.get(index-1);
+        actions.moveToElement(product).perform();
+        return product.getText();
     }
 
     public Boolean isOptionNotSelected(String option){

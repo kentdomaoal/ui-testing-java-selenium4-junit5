@@ -85,7 +85,7 @@
     <dependency>
       <groupId>me.jvt.cucumber</groupId>
       <artifactId>reporting-plugin</artifactId>
-      <version>5.0.0</version>
+      <version>7.3.0</version>
     </dependency>
 
     <!-- Dependency Injection -->
@@ -114,6 +114,25 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
         <version>3.0.0-M7</version>
+      </plugin>
+      <plugin>
+        <groupId>com.trivago.rta</groupId>
+        <artifactId>cluecumber-maven</artifactId>
+        <version>3.1.0</version>
+        <executions>
+          <execution>
+            <id>report</id>
+            <phase>post-integration-test</phase>
+            <goals>
+              <goal>reporting</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <sourceJsonReportDirectory>${project.build.directory}/cucumber-report</sourceJsonReportDirectory>
+          <generatedHtmlReportDirectory>${project.build.directory}/generated-report</generatedHtmlReportDirectory>
+          <expandBeforeAfterHooks>true</expandBeforeAfterHooks>
+        </configuration>
       </plugin>
     </plugins>
   </build>

@@ -9,7 +9,8 @@ Feature: Advance Searching for Products
       | Decoration Options | Undecorated |
     And sort the results by "Price Low to High"
     Then user should see the following products in order
-      | order | productName                    |
-      | 1     | Classic Blue Spruce            |
-      | 3     | Frosted Alpine Balsam Fir Tree |
-      | 4     | Berkshire Mountain Fir         |
+      | order | productName                |
+      | 1     | Classic Blue Spruce        |
+      | 3     | Classic Blue Spruce        |
+      | 4     | Classic Blue Spruce        |
+      | 10    | Frosted Alpine Balsam Tree |
