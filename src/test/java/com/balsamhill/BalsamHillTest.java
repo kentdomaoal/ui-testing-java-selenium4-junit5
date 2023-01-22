@@ -22,7 +22,7 @@ public class BalsamHillTest {
         DriverManager driverManager = new DriverManager();
         driver = driverManager.createWebDriver();
         driver.manage().window().maximize();
-        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+//        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
     }
 
 //    @AfterEach

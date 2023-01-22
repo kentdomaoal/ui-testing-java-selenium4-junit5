@@ -1,5 +1,6 @@
 package com.balsamhill.pages;
 
+import com.balsamhill.util.Target;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
@@ -34,12 +35,12 @@ public class Page {
     List<WebElement> listOfProducts;
 
     // XPaths
-    private String navigationLinkXpath = "//div/a[contains(text(),'{}')]";
-    private String mainOptionXpath = "//div/span[contains(text(),'{}')]"
+    private final String navigationLinkXpath = "//div/a[contains(text(),'{0}')]";
+    private final String mainOptionXpath = "//div/span[contains(text(),'{0}')]"
             + "/following-sibling::span[@class='arrow' and not(@disabled)]";
-    private String subOptionXpath = "//div/span/span[contains(@class,'facet-name-text') "
-            + "and contains(text(),'{}') and not(@disabled)]";
-    private String selectedOptionXpath = "//div[@class='filter-selected-blk']//span[text()='{}']";
+    private final String subOptionXpath = "//div/span/span[contains(@class,'facet-name-text') "
+            + "and contains(text(),'{0}') and not(@disabled)]";
+    private final String selectedOptionXpath = "//div[@class='filter-selected-blk']//span[text()='{0}']";
 
     public Page(WebDriver driver){
         this.driver = driver;
@@ -57,7 +58,7 @@ public class Page {
     }
 
     public void navigateTo(String link){
-        WebElement navigationLink = driver.findElement(By.xpath(formatXpath(navigationLinkXpath,link)));
+        WebElement navigationLink = driver.findElement(Target.locatedByXpath(navigationLinkXpath).of(link));
         wait.until(ExpectedConditions.elementToBeClickable(navigationLink));
         navigationLink.click();
     }
@@ -68,7 +69,7 @@ public class Page {
     }
 
     public void selectMainOption(String mainOption){
-        WebElement mainOptionElement = driver.findElement(By.xpath(formatXpath(mainOptionXpath,mainOption)));
+        WebElement mainOptionElement = driver.findElement(Target.locatedByXpath(mainOptionXpath).of(mainOption));
 
         actions = new Actions(driver);
         actions.scrollToElement(mainOptionElement).perform();
@@ -77,7 +78,7 @@ public class Page {
     }
 
     public void selectSubOption(String subOption){
-        WebElement subOptionElement = driver.findElement(By.xpath(formatXpath(subOptionXpath,subOption)));
+        WebElement subOptionElement = driver.findElement(Target.locatedByXpath(subOptionXpath).of(subOption));
         wait.until(ExpectedConditions.elementToBeClickable(subOptionElement));
         if(isOptionNotSelected(subOption)) {
             subOptionElement.click();
@@ -124,14 +125,10 @@ public class Page {
 
     public Boolean isOptionNotSelected(String option){
         try{
-            driver.findElement(By.xpath(formatXpath(selectedOptionXpath,option)));
+            driver.findElement(Target.locatedByXpath(selectedOptionXpath).of(option));
             return false;
         } catch (NoSuchElementException e){
             return true;
         }
-    }
-
-    public String formatXpath(String xpath, String value){
-        return xpath.replace("{}",value);
     }
 }
