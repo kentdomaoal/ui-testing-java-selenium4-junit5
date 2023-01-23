@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ArtificialChristmasTreePage extends Page {
-//    @FindBy(xpath = "//div[contains(text(),'Most Popular Trees')]/parent::section/div/ul/li//div[@class='wo-mtslider__title']")
+
     @FindBy(xpath = "//div[text()='Most Popular Trees']/parent::section//div[@class='wo-mtslider__title']")
     List<WebElement> headerSliderProducts;
     WebDriver driver;

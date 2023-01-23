@@ -1,7 +1,6 @@
 package com.balsamhill.pages;
 
 import com.balsamhill.util.Target;
-import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -17,6 +16,8 @@ import org.slf4j.LoggerFactory;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.balsamhill.util.Target.using;
 
 public class Page {
     private static final Logger LOGGER = LoggerFactory.getLogger(Page.class);
@@ -34,13 +35,14 @@ public class Page {
     @FindBy(xpath = "//div[@class='details']/span")
     List<WebElement> listOfProducts;
 
-    // XPaths
-    private final String navigationLinkXpath = "//div/a[contains(text(),'{0}')]";
-    private final String mainOptionXpath = "//div/span[contains(text(),'{0}')]"
-            + "/following-sibling::span[@class='arrow' and not(@disabled)]";
-    private final String subOptionXpath = "//div/span/span[contains(@class,'facet-name-text') "
-            + "and contains(text(),'{0}') and not(@disabled)]";
-    private final String selectedOptionXpath = "//div[@class='filter-selected-blk']//span[text()='{0}']";
+    // Targets using Dynamic XPath
+    private final Target NAVIGATION_LINK = Target.locatedByXpath("//div/a[contains(text(),'{0}')]");
+    private final Target MAIN_OPTION = Target.locatedByXpath("//div/span[contains(text(),'{0}')]"
+            + "/following-sibling::span[@class='arrow' and not(@disabled)]");
+    private final Target SUB_OPTION =  Target.locatedByXpath("//div/span/span[contains(@class,'facet-name-text') "
+            + "and contains(text(),'{0}') and not(@disabled)]");
+    private final Target SELECTED_OPTION =
+            Target.locatedByXpath("//div[@class='filter-selected-blk']//span[text()='{0}']");
 
     public Page(WebDriver driver){
         this.driver = driver;
@@ -58,7 +60,7 @@ public class Page {
     }
 
     public void navigateTo(String link){
-        WebElement navigationLink = driver.findElement(Target.locatedByXpath(navigationLinkXpath).of(link));
+        WebElement navigationLink = using(driver).find(NAVIGATION_LINK.of(link));
         wait.until(ExpectedConditions.elementToBeClickable(navigationLink));
         navigationLink.click();
     }
@@ -68,19 +70,18 @@ public class Page {
         return header.getText();
     }
 
-    public void selectMainOption(String mainOption){
-        WebElement mainOptionElement = driver.findElement(Target.locatedByXpath(mainOptionXpath).of(mainOption));
-
+    public void selectMainOption(String option){
+        WebElement mainOptionElement = using(driver).find(MAIN_OPTION.of(option));
         actions = new Actions(driver);
         actions.scrollToElement(mainOptionElement).perform();
         wait.until(ExpectedConditions.elementToBeClickable(mainOptionElement));
         mainOptionElement.click();
     }
 
-    public void selectSubOption(String subOption){
-        WebElement subOptionElement = driver.findElement(Target.locatedByXpath(subOptionXpath).of(subOption));
+    public void selectSubOption(String option){
+        WebElement subOptionElement = using(driver).find(SUB_OPTION.of(option));
         wait.until(ExpectedConditions.elementToBeClickable(subOptionElement));
-        if(isOptionNotSelected(subOption)) {
+        if(isOptionNotSelected(option)) {
             subOptionElement.click();
         }
     }
@@ -89,11 +90,6 @@ public class Page {
         wait.until(ExpectedConditions.visibilityOfAllElements(listOfProducts));
         Select sortOptionElement = new Select(sortOption);
         sortOptionElement.selectByVisibleText(option);
-//        try {
-//            Thread.sleep(3000);
-//        } catch (InterruptedException e) {
-//            throw new RuntimeException(e);
-//        }
     }
 
     public List<String> getProductList(){
@@ -125,7 +121,7 @@ public class Page {
 
     public Boolean isOptionNotSelected(String option){
         try{
-            driver.findElement(Target.locatedByXpath(selectedOptionXpath).of(option));
+            using(driver).find(SELECTED_OPTION.of(option));
             return false;
         } catch (NoSuchElementException e){
             return true;
