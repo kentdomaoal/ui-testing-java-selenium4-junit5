@@ -17,8 +17,6 @@ import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.balsamhill.util.Target.using;
-
 public class Page {
     private static final Logger LOGGER = LoggerFactory.getLogger(Page.class);
     private final WebDriver driver;
@@ -60,29 +58,26 @@ public class Page {
     }
 
     public void navigateTo(String link){
-        WebElement navigationLink = using(driver).find(NAVIGATION_LINK.of(link));
-        wait.until(ExpectedConditions.elementToBeClickable(navigationLink));
-        navigationLink.click();
+        WebElement navigationLink = driver.findElement(NAVIGATION_LINK.of(link));
+        wait.until(ExpectedConditions.elementToBeClickable(navigationLink)).click();
     }
 
     public String getHeader(){
-        wait.until(ExpectedConditions.visibilityOf(header));
-        return header.getText();
+        return wait.until(ExpectedConditions.visibilityOf(header)).getText();
     }
 
     public void selectMainOption(String option){
-        WebElement mainOptionElement = using(driver).find(MAIN_OPTION.of(option));
+        WebElement mainOptionElement = driver.findElement(MAIN_OPTION.of(option));
         actions = new Actions(driver);
         actions.scrollToElement(mainOptionElement).perform();
-        wait.until(ExpectedConditions.elementToBeClickable(mainOptionElement));
-        mainOptionElement.click();
+        wait.until(ExpectedConditions.elementToBeClickable(mainOptionElement)).click();
     }
 
     public void selectSubOption(String option){
-        WebElement subOptionElement = using(driver).find(SUB_OPTION.of(option));
-        wait.until(ExpectedConditions.elementToBeClickable(subOptionElement));
+        WebElement subOptionElement = driver.findElement(SUB_OPTION.of(option));
+
         if(isOptionNotSelected(option)) {
-            subOptionElement.click();
+            wait.until(ExpectedConditions.elementToBeClickable(subOptionElement)).click();
         }
     }
 
@@ -121,7 +116,7 @@ public class Page {
 
     public Boolean isOptionNotSelected(String option){
         try{
-            using(driver).find(SELECTED_OPTION.of(option));
+            driver.findElement(SELECTED_OPTION.of(option));
             return false;
         } catch (NoSuchElementException e){
             return true;

@@ -1,32 +1,20 @@
 package com.balsamhill.util;
 
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
 
 public class Target {
-    private String xPathOrCssSelector;
-    private SelectorType selectorType;
-    private WebDriver driver;
+    private final String xPathOrCssSelector;
+    private final SelectorType selectorType;
 
     private Target(String xPathOrCssSelector, SelectorType selectorType) {
         this.xPathOrCssSelector = xPathOrCssSelector;
         this.selectorType = selectorType;
-    }
-    private Target(WebDriver driver){
-        this.driver = driver;
     }
     public static Target locatedByXpath(String xPathSelector){
         return new Target(xPathSelector, SelectorType.XPATH);
     }
     public static Target locatedByCSS(String cssSelector){
         return new Target(cssSelector, SelectorType.CSS);
-    }
-    public static Target using(WebDriver driver){
-        return new Target(driver);
-    }
-    public WebElement find(By targetOf){
-        return driver.findElement(targetOf);
     }
 
     public By of (String... parameters){
